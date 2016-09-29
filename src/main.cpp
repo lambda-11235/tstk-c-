@@ -1,6 +1,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
 using namespace std;
@@ -14,29 +15,50 @@ int main(int argc, char *argv[]) {
   Interpreter interpreter;
   vector<Token> toks;
 
-  for(int i = 1; i < argc; i++) {
-    ifstream input(argv[i]);
-    Lexer lex(&input);
+  if(argc > 1) {
+    for(int i = 1; i < argc; i++) {
+      ifstream input(argv[i]);
+      Lexer lex(&input);
 
-    try {
-    for(Token tok : lex.tokenize())
-      toks.push_back(tok);
-    } catch(LexerException& lexExc) {
-      cout << argv[i] << ' ' << lexExc.getLine() << ','
-           << lexExc.getColumn() << ": " << lexExc.getMessage() << endl;
+      try {
+        for(Token tok : lex.tokenize())
+          toks.push_back(tok);
+      } catch(LexerException& lexExc) {
+        cout << argv[i] << ' ' << lexExc.getLine() << ','
+             << lexExc.getColumn() << ": " << lexExc.getMessage() << endl;
+      }
+
+      input.close();
     }
 
-    input.close();
+    interpreter.addTokens(toks);
+    interpreter.run();
+  } else {
+    string buf;
+    stringstream strm;
+
+    while(cin) {
+      getline(cin, buf);
+      strm.clear();
+      strm.str(buf);
+
+      Lexer lex(&strm);
+      toks.clear();
+
+      try {
+        for(Token tok : lex.tokenize())
+          toks.push_back(tok);
+      } catch(LexerException& lexExc) {
+        cout << lexExc.getColumn() << ": " << lexExc.getMessage() << endl;
+      }
+
+      interpreter.addTokens(toks);
+      interpreter.run();
+
+      interpreter.printStack();
+      cout << endl;
+    }
   }
-
-  printTokens(toks);
-  cout << endl;
-
-  printInstructions(removeLabels(toks, 0));
-  cout << endl;
-
-  interpreter.addTokens(toks);
-  interpreter.run();
 
   return 0;
 }

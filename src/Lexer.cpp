@@ -16,7 +16,7 @@ Lexer::Lexer(std::istream* instr) {
 std::vector<Token> Lexer::tokenize() {
   std::vector<Token> toks;
 
-  while(peek() > 0) {
+  while(*input && peek() > 0) {
     toks.push_back(getToken());
   }
 
@@ -98,7 +98,10 @@ Token Lexer::getToken() {
       std::string msg = "Unexpected command ";
       msg += com;
       msg += " found";
-      throw LexerException(line, column, msg);
+
+      // Subtracting com.size from column gives the column where the command
+      // starts, instead where it ends.
+      throw LexerException(line, column - com.size(), msg);
     }
 
     tok.type = INST;
