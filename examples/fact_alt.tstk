@@ -1,0 +1,28 @@
+# Reads a number and prints the factorial
+# Alternate Version
+
+read          # [n]
+
+ppos 6 add    # [n, ret], ret is address just after next jmp
+swap          # [ret, n]
+@fact jmp     # Call function
+
+print
+@end jmp
+
+# The factorial function.
+:fact: # [ret, n]
+1      # [ret, n, 1]
+
+:loop:               # [ret, n, a]
+1 get 2 @factEnd jlt # goto factEnd is n <= 1
+1 get mul            # [ret, n, a*n]
+swap 1 sub swap      # [ret, n-1, a*n]
+@loop jmp
+
+:factEnd: # [ret, n, a]
+swap pop  # [ret, a]
+swap      # [a, ret]
+jmp
+
+:end:
