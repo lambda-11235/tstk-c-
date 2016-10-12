@@ -38,7 +38,7 @@ void Interpreter::run() {
     if(inst.pushInt) {
       stack.push_back(inst.inst.n);
     } else {
-      // NOTE: Arguments are popped off in reverse order.
+      // NOTE: Arguments are popped off of the stack in reverse order.
       switch(inst.inst.com) {
         case ADD:
           y = stack.back();

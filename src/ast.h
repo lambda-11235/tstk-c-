@@ -17,7 +17,7 @@ enum COMMAND : char {
 };
 
 /**
- * Stores either an instruction to push an integer or a command.
+ * Stores either the instruction to push an integer or a command.
  */
 struct Instruction {
   bool pushInt;
@@ -38,6 +38,8 @@ enum TOKENTYPE : char {LABEL, REFER, INST};
 struct Token {
   TOKENTYPE type;
 
+  // Unfortunately a union cannot be used here since string has a non-trivial
+  // constructor. So, just ignore the field that isn't used.
   std::string name;
   Instruction inst;
 };
