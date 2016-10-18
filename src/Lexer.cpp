@@ -57,7 +57,7 @@ Token Lexer::getToken() {
   }
 
   else if(ch == '-' || (ch >= '0' && ch <= '9')) {
-    int_type n = getInteger();
+    size_t n = getInteger();
 
     Instruction inst;
     inst.pushInt = true;
@@ -131,10 +131,10 @@ void Lexer::skipWhitespace() {
 }
 
 
-int_type Lexer::getInteger() {
+size_t Lexer::getInteger() {
   bool negative = false;
-  int_type n = 0;
-  int_type tmp;
+  size_t n = 0;
+  size_t tmp;
 
   if(peek() == '-') {
     negative = true;
