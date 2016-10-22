@@ -7,33 +7,65 @@
 using namespace std;
 
 #include "ast.h"
+#include "CommandLine.h"
 #include "Lexer.h"
 #include "Interpreter.h"
+
+
+void printHelpMsg();
 
 
 int main(int argc, char *argv[]) {
   Interpreter interpreter;
   vector<Token> toks;
 
-  if(argc > 1) {
-    for(int i = 1; i < argc; i++) {
-      ifstream input(argv[i]);
-      Lexer lex(&input);
+  CommandLine commandLine(argc, argv);
 
-      try {
-        for(Token tok : lex.tokenize())
+  try {
+    commandLine.parse();
+  } catch(CommandLineError& err) {
+    cout << "Error: " << err.what() << ".\n";
+    return 1;
+  }
+
+
+  if(commandLine.shouldPrintHelp()) {
+    printHelpMsg();
+    return 0;
+  }
+
+
+  if(commandLine.hasInputFiles()) {
+    for(string file : commandLine.getInputFiles()) {
+      ifstream input(file.c_str());
+
+      if(input) {
+        Lexer lex(&input);
+
+        try {
+          for(Token tok : lex.tokenize())
           toks.push_back(tok);
-      } catch(LexerException& lexExc) {
-        cout << argv[i] << ' ' << lexExc.getLine() << ','
-             << lexExc.getColumn() << ": " << lexExc.getMessage() << endl;
-      }
+        } catch(LexerException& lexExc) {
+          cout << file << ' ' << lexExc.getLine() << ','
+          << lexExc.getColumn() << ": " << lexExc.getMessage() << ".\n";
 
-      input.close();
+          return 1;
+        }
+
+        input.close();
+      } else {
+        cout << "Error: Could not read file " << file << ".\n";
+
+        return 1;
+      }
     }
 
     interpreter.addTokens(toks);
     interpreter.run();
-  } else {
+  }
+
+
+  if(commandLine.shouldInterpret()) {
     string buf;
     stringstream strm;
 
@@ -61,4 +93,12 @@ int main(int argc, char *argv[]) {
   }
 
   return 0;
+}
+
+
+void printHelpMsg() {
+  cout << "Usage: tstk [files]\n\n"
+       << "Flags:\n"
+       << "\t-i, --interpret -- Run the interpreter.\n"
+       << "\t-h, --help -- Print this help message.\n";
 }

@@ -203,7 +203,7 @@ void Interpreter::run() {
           break;
 
         case CPRINT:
-          std::cout << (char) stack.back() << std::endl;
+          std::cout << (char) stack.back();
           stack.pop_back();
           break;
 
