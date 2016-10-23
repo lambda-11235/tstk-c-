@@ -38,7 +38,7 @@ public:
 private:
   void skipWhitespace();
 
-  size_t getInteger();
+  int_type getInteger();
   std::string getWord();
 
   inline char peek();

@@ -30,9 +30,9 @@ void Interpreter::reset() {
 void Interpreter::run() {
   while(ip < instructions.size()) {
     Instruction inst = instructions[ip];
-    size_t x;
-    size_t y;
-    size_t n;
+    int_type x;
+    int_type y;
+    int_type n;
 
 
     if(inst.pushInt) {
