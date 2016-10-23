@@ -8,8 +8,8 @@
 
 
 std::vector<Instruction> removeLabels(std::vector<Token> toks,
-                                      size_t startAddr) {
-  std::map<std::string, size_t> lblAddrs = labelAddresses(toks, startAddr);
+                                      int_type startAddr) {
+  std::map<std::string, int_type> lblAddrs = labelAddresses(toks, startAddr);
   std::vector<Instruction> insts;
   Instruction tmpInst;
 
@@ -31,11 +31,11 @@ std::vector<Instruction> removeLabels(std::vector<Token> toks,
 }
 
 
-std::map<std::string, size_t> labelAddresses(std::vector<Token> toks,
-                                               size_t startAddr) {
+std::map<std::string, int_type> labelAddresses(std::vector<Token> toks,
+                                               int_type startAddr) {
   // The instruction pointer keeps the address of the current instruction.
-  size_t ip = startAddr;
-  std::map<std::string, size_t> lblAddrs;
+  int_type ip = startAddr;
+  std::map<std::string, int_type> lblAddrs;
 
   for(Token tok : toks) {
     switch(tok.type) {

@@ -8,6 +8,9 @@
 #ifndef AST_H
 #define AST_H
 
+typedef long long int_type;
+
+
 enum COMMAND : char {
   ADD, SUB, MUL, DIV,
   JMP, JEQ, JNQ, JGT, JLT,
@@ -23,7 +26,7 @@ struct Instruction {
   bool pushInt;
 
   union {
-    size_t n;
+    int_type n;
     COMMAND com;
   } inst;
 };
@@ -55,13 +58,13 @@ struct Token {
  * @return The instruction set after all labels have been removed.
  */
 std::vector<Instruction> removeLabels(std::vector<Token> toks,
-                                      size_t startAddr);
+                                      int_type startAddr);
 
 /**
  * Gets a map of the names of labels to the addresses they point to.
  */
-std::map<std::string, size_t> labelAddresses(std::vector<Token> toks,
-                                               size_t startAddr);
+std::map<std::string, int_type> labelAddresses(std::vector<Token> toks,
+                                               int_type startAddr);
 
 void printInstruction(Instruction inst);
 void printInstructions(std::vector<Instruction> insts);
