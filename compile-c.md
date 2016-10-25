@@ -41,7 +41,7 @@ have the form `L0`, `L1`, etc. When a jump occurs the TSTK instruction number is
 stored in `addr` and execution branches to the `lookup` label.
 
 ``` cpp
-#include "runtime.h"
+#include <runtime.h>
 
 int main(int argc, char const *argv[]) {
   int_type size = 0;
@@ -227,6 +227,8 @@ y = stack[size];
 
 if(y == x) {
   goto L7;
+} else {
+  goto L/* m + 1 */;
 }
 
 Lm:

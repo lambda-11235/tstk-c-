@@ -10,6 +10,7 @@ using namespace std;
 #include "CommandLine.h"
 #include "Lexer.h"
 #include "Interpreter.h"
+#include "compiler/C.h"
 
 
 void printHelpMsg();
