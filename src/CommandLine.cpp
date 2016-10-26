@@ -6,6 +6,9 @@ CommandLine::CommandLine(int argc, char* argv[]) {
   // Defaults
   interpret = false;
   help = false;
+  compile = false;
+  stackSize = 30000;
+  outputFile = "";
 
   for(int i = 1; i < argc; i++) {
     args.push_back(argv[i]);
@@ -14,6 +17,8 @@ CommandLine::CommandLine(int argc, char* argv[]) {
 
 
 void CommandLine::parse() {
+  expectingStackSize = false;
+
   bool onlyInputFiles = false;
 
   // If no arguments are passed, then run the interpreter.
@@ -35,6 +40,12 @@ void CommandLine::parse() {
       } else {
         parseShortFlags(arg.substr(1));
       }
+    } else if(expectingStackSize) {
+      stackSize = atoi(arg.c_str());
+      expectingStackSize = false;
+    } else if(expectingOutputFile) {
+      outputFile = arg;
+      expectingOutputFile = false;
     } else {
       inputFiles.push_back(arg);
     }
@@ -43,10 +54,16 @@ void CommandLine::parse() {
 
 
 void CommandLine::parseLongFlag(std::string flag) {
-  if(flag == "interpret")
+  if(flag == "compile")
+    compile = true;
+  else if(flag == "interpret")
     interpret = true;
   else if(flag == "help")
     help = true;
+  else if(flag == "output")
+    expectingOutputFile = true;
+  else if(flag == "stack-size")
+    expectingStackSize = true;
   else
     throw NoFlagError(flag);
 }
@@ -55,12 +72,26 @@ void CommandLine::parseLongFlag(std::string flag) {
 void CommandLine::parseShortFlags(std::string flags) {
   for(char flag : flags) {
     switch(flag) {
+      case 'c':
+        compile = true;
+        break;
+
       case 'i':
         interpret = true;
         break;
+
       case 'h':
         help = true;
         break;
+
+      case 'o':
+        expectingOutputFile = true;
+        break;
+
+      case 's':
+        expectingStackSize = true;
+        break;
+
       default:
         std::string str;
         str += flag;

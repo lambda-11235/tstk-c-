@@ -61,8 +61,20 @@ int main(int argc, char *argv[]) {
       }
     }
 
-    interpreter.addTokens(toks);
-    interpreter.run();
+    if(commandLine.shouldCompile()) {
+      compiler::C compiler;
+      compiler.addTokens(toks);
+
+      if(commandLine.hasOutputFile()) {
+        ofstream writer(commandLine.getOutputFile().c_str());
+        compiler.compile(writer, commandLine.getStackSize());
+      } else {
+        compiler.compile(cout, commandLine.getStackSize());
+      }
+    } else {
+      interpreter.addTokens(toks);
+      interpreter.run();
+    }
   }
 
 
@@ -98,8 +110,11 @@ int main(int argc, char *argv[]) {
 
 
 void printHelpMsg() {
-  cout << "Usage: tstk [files]\n\n"
+  cout << "Usage: tstk [files] [-o file] [-s stack_size]\n\n"
        << "Flags:\n"
+       << "\t-c, --compile -- Compile listed files instead of interpreting them.\n"
        << "\t-i, --interpret -- Run the interpreter.\n"
-       << "\t-h, --help -- Print this help message.\n";
+       << "\t-h, --help -- Print this help message.\n"
+       << "\t-o, --output -- Set the output file for compilation.\n"
+       << "\t-s, --stack-size -- Set the stack size in compiled code.\n";
 }
