@@ -63,7 +63,13 @@ int main(int argc, char *argv[]) {
 
     if(commandLine.shouldCompile()) {
       compiler::C compiler;
-      compiler.addTokens(toks);
+
+      try{
+        compiler.addTokens(toks);
+      } catch(ReferenceError& err) {
+        cerr << "Error: Reference to unknown label, @" << err.getReference() << endl;
+        return 1;
+      }
 
       if(commandLine.hasOutputFile()) {
         ofstream writer(commandLine.getOutputFile().c_str());
@@ -97,11 +103,15 @@ int main(int argc, char *argv[]) {
         cout << lexExc.getColumn() << ": " << lexExc.getMessage() << endl;
       }
 
-      interpreter.addTokens(toks);
-      interpreter.run();
+      try{
+        interpreter.addTokens(toks);
+        interpreter.run();
 
-      interpreter.printStack();
-      cout << endl;
+        interpreter.printStack();
+        cout << endl;
+      } catch(ReferenceError& err) {
+        cerr << "Error: Reference to unknown label, @" << err.getReference() << endl;
+      }
     }
   }
 

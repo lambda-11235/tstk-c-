@@ -1,31 +1,14 @@
 
 #include <istream>
+#include <string>
 #include <vector>
 
 #include "ast.h"
+#include "exception/Lexer.h"
 
 
 #ifndef LEXER_H
 #define LEXER_H
-
-/**
- * A possible lexer error, contaning information about the line, column, and
- * details of the error.
- */
-class LexerException {
-  int line;
-  int column;
-  std::string msg;
-
-public:
-  LexerException(int line, int column, std::string msg)
-    : line(line), column(column), msg(msg) {
-  }
-
-  inline int getLine() { return line; }
-  inline int getColumn() { return column; }
-  inline std::string getMessage() { return msg; }
-};
 
 
 class Lexer {

@@ -10,17 +10,27 @@
 std::vector<Instruction> removeLabels(std::vector<Token> toks,
                                       int_type startAddr) {
   std::map<std::string, int_type> lblAddrs = labelAddresses(toks, startAddr);
+  std::map<std::string, int_type>::iterator it;
   std::vector<Instruction> insts;
   Instruction tmpInst;
 
   for(Token tok : toks) {
     switch(tok.type) {
       case LABEL: break;
+
       case REFER:
-        tmpInst.pushInt = true;
-        tmpInst.inst.n = lblAddrs[tok.name];
-        insts.push_back(tmpInst);
+        it = lblAddrs.find(tok.name);
+
+        if(it != lblAddrs.end()) {
+          tmpInst.pushInt = true;
+          tmpInst.inst.n = it->second;
+          insts.push_back(tmpInst);
+        } else {
+          throw ReferenceError(tok.name);
+        }
+
         break;
+
       case INST:
         insts.push_back(tok.inst);
         break;

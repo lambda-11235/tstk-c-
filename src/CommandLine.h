@@ -1,35 +1,12 @@
 
-#include <stdexcept>
 #include <string>
 #include <vector>
 
 #include "ast.h"
+#include "exception/CommandLine.h"
 
 #ifndef COMMAND_LINE_H
 #define COMMAND_LINE_H
-
-/**
- * Any error in parsing the command line arguments.
- */
-class CommandLineError : public std::runtime_error {
-public:
-  CommandLineError(const std::string& error) : runtime_error(error) {}
-};
-
-
-/**
- * A command line error that occurs when the user gives an inexistent flag.
- */
-class NoFlagError : public CommandLineError {
-private:
-  std::string flag;
-
-public:
-  NoFlagError(std::string flag) : CommandLineError("Invalid command line flag "
-    + flag), flag(flag) {}
-
-  inline std::string getFlag() const { return flag; }
-};
 
 
 /**
