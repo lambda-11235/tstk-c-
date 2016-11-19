@@ -18,17 +18,25 @@ class Interpreter {
 public:
   Interpreter();
 
-  /// Adds the instructions in a set of tokens to the currently executing program.
+  /**
+   * Adds the instructions in a set of tokens to the currently executing program.
+   */
   void addTokens(std::vector<Token> toks);
 
-  // Resets the program, but does not remove any instructions.
+  /**
+   * Resets the program, but does not remove any instructions.
+   */
   void reset();
 
-  /// Runs the instructions, stopping after the instruction pointer reaches the
-  /// last instruction.
+  /**
+   * Runs the instructions, stopping after the instruction pointer reaches the
+   * last instruction.
+   */
   void run();
 
-  /// Print the current stack to STDOUT.
+  /**
+   * Print the current stack to STDOUT.
+   */
   void printStack();
 };
 

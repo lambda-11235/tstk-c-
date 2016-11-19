@@ -20,7 +20,7 @@ enum COMMAND : char {
 };
 
 /**
- * Stores either the instruction to push an integer or a command.
+ * Stores either an instruction to push an integer or a command.
  */
 struct Instruction {
   bool pushInt;
@@ -61,7 +61,10 @@ std::vector<Instruction> removeLabels(std::vector<Token> toks,
                                       int_type startAddr);
 
 /**
- * Gets a map of the names of labels to the addresses they point to.
+ * Returns a map of the names of labels to the addresses they point to.
+ *
+ * @param toks The tokens containing the labels.
+ * @param startAddr The address of the first token in the list.
  */
 std::map<std::string, int_type> labelAddresses(std::vector<Token> toks,
                                                int_type startAddr);
