@@ -56,6 +56,8 @@ void CommandLine::parse() {
 void CommandLine::parseLongFlag(std::string flag) {
   if(flag == "compile")
     compile = true;
+  else if(flag == "debug")
+    debug = true;
   else if(flag == "interpret")
     interpret = true;
   else if(flag == "help")
@@ -74,6 +76,10 @@ void CommandLine::parseShortFlags(std::string flags) {
     switch(flag) {
       case 'c':
         compile = true;
+        break;
+
+      case 'd':
+        debug = true;
         break;
 
       case 'i':

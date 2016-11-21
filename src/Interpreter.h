@@ -29,6 +29,11 @@ public:
   void reset();
 
   /**
+   * Runs a single instruction.
+   */
+  void runInstruction();
+
+  /**
    * Runs the instructions, stopping after the instruction pointer reaches the
    * last instruction.
    */
@@ -38,6 +43,16 @@ public:
    * Print the current stack to STDOUT.
    */
   void printStack();
+
+  /**
+   * Determines if the interpreter still has instructions to run.
+   */
+  inline bool stillRunning() const { return ip < instructions.size(); }
+
+  /**
+   * Returns the next instruction to be executed.
+   */
+  inline Instruction currentInstruction() const { return instructions[ip]; }
 };
 
 #endif /* INTERPRETER_H */

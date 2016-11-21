@@ -61,6 +61,7 @@ int main(int argc, char *argv[]) {
       }
     }
 
+
     if(commandLine.shouldCompile()) {
       compiler::C compiler;
 
@@ -77,7 +78,30 @@ int main(int argc, char *argv[]) {
       } else {
         compiler.compile(cout, commandLine.getStackSize());
       }
-    } else {
+    }
+
+    else if(commandLine.shouldDebug()) {
+      Instruction inst;
+      string buf;
+      interpreter.addTokens(toks);
+
+      cout << "Running script (press enter to execute instructions)";
+
+      while(interpreter.stillRunning()) {
+        inst = interpreter.currentInstruction();
+        cout << "\n<Running> ";
+        printInstruction(inst);
+
+        getline(cin, buf);
+
+        interpreter.runInstruction();
+
+        if(!inst.pushInt && inst.inst.com == CPRINT) cout << endl;
+        interpreter.printStack();
+      }
+    }
+
+    else {
       interpreter.addTokens(toks);
       interpreter.run();
     }
@@ -89,6 +113,7 @@ int main(int argc, char *argv[]) {
     stringstream strm;
 
     while(cin) {
+      cout << "> ";
       getline(cin, buf);
       strm.clear();
       strm.str(buf);
@@ -100,6 +125,8 @@ int main(int argc, char *argv[]) {
         for(Token tok : lex.tokenize())
           toks.push_back(tok);
       } catch(LexerException& lexExc) {
+        // The line isn't printed since it was obviously the last one entered
+        // into the REPL.
         cout << lexExc.getColumn() << ": " << lexExc.getMessage() << endl;
       }
 
@@ -120,9 +147,10 @@ int main(int argc, char *argv[]) {
 
 
 void printHelpMsg() {
-  cout << "Usage: tstk [files] [-o file] [-s stack_size]\n\n"
+  cout << "Usage: tstk [flags] [files] [-o file] [-s stack_size]\n\n"
        << "Flags:\n"
        << "\t-c, --compile -- Compile listed files instead of interpreting them.\n"
+       << "\t-d, --debug -- Run the debugger.\n"
        << "\t-i, --interpret -- Run the interpreter.\n"
        << "\t-h, --help -- Print this help message.\n"
        << "\t-o, --output -- Set the output file for compilation.\n"

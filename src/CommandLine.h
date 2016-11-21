@@ -14,6 +14,7 @@
  */
 class CommandLine {
 private:
+  bool debug;
   bool interpret;
   bool help;
   bool compile;
@@ -28,16 +29,17 @@ private:
 public:
   CommandLine(int argc, char* argv[]);
 
-  inline bool shouldInterpret() { return interpret; }
-  inline bool shouldPrintHelp() { return help; }
-  inline bool shouldCompile() { return compile; }
-  inline int_type getStackSize() { return stackSize; }
+  inline bool shouldDebug() const { return debug; }
+  inline bool shouldInterpret() const { return interpret; }
+  inline bool shouldPrintHelp() const { return help; }
+  inline bool shouldCompile() const { return compile; }
+  inline int_type getStackSize() const { return stackSize; }
 
-  inline bool hasOutputFile() { return outputFile != ""; }
-  inline std::string getOutputFile() { return outputFile; }
+  inline bool hasOutputFile() const { return outputFile != ""; }
+  inline std::string getOutputFile() const { return outputFile; }
 
-  inline bool hasInputFiles() { return inputFiles.size() > 0; }
-  inline std::vector<std::string> getInputFiles() { return inputFiles; }
+  inline bool hasInputFiles() const { return inputFiles.size() > 0; }
+  inline std::vector<std::string> getInputFiles() const { return inputFiles; }
 
   void parse();
 
