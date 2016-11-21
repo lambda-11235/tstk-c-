@@ -96,6 +96,9 @@ int main(int argc, char *argv[]) {
 
         interpreter.runInstruction();
 
+        if(!inst.pushInt && (inst.inst.com == READ || inst.inst.com == CREAD))
+          cin.ignore();
+
         if(!inst.pushInt && inst.inst.com == CPRINT) cout << endl;
         interpreter.printStack();
       }
