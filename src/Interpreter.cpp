@@ -18,6 +18,11 @@ void Interpreter::addTokens(std::vector<Token> toks) {
   for(Instruction inst : insts) {
     instructions.push_back(inst);
   }
+
+  for(Token tok : toks) {
+    if(tok.type != LABEL)
+      tokens.push_back(tok);
+  }
 }
 
 

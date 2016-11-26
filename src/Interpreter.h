@@ -11,9 +11,16 @@
 
 class Interpreter {
   std::vector<Instruction> instructions;
+
+  // The tokens corresponding to each instruction. Note that all labels are
+  // removed from the token list.
+  std::vector<Token> tokens;
+
   std::vector<int_type> stack;
-  int_type ip;  // The instruction pointer. It contains the index of the
-                // currently executing instruction.
+
+  // The instruction pointer. It contains the index of the currently executing
+  // instruction.
+  int_type ip;
 
 public:
   Interpreter();
@@ -53,6 +60,12 @@ public:
    * Returns the next instruction to be executed.
    */
   inline Instruction currentInstruction() const { return instructions[ip]; }
+
+  /**
+   * Returns token of the next instruction to be executed.
+   * Useful for getting debugging information.
+   */
+  inline Token currentToken() const { return tokens[ip]; }
 };
 
 #endif /* INTERPRETER_H */

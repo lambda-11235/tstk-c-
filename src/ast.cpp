@@ -101,22 +101,26 @@ void printInstructions(std::vector<Instruction> insts) {
   }
 }
 
+void printToken(Token tok) {
+  switch(tok.type) {
+    case LABEL:
+      std::cout << ':' << tok.name << ":";
+      break;
+    case REFER:
+      std::cout << '@' << tok.name;
+      break;
+    case INST:
+      printInstruction(tok.inst);
+      break;
+    default:
+      std::cout << "???";
+      break;
+  }
+}
+
 void printTokens(std::vector<Token> toks) {
   for(Token tok : toks) {
-    switch(tok.type) {
-      case LABEL:
-        std::cout << ':' << tok.name << ": ";
-        break;
-      case REFER:
-        std::cout << '@' << tok.name << " ";
-        break;
-      case INST:
-        printInstruction(tok.inst);
-        std::cout << " ";
-        break;
-      default:
-        std::cout << "??? ";
-        break;
-    }
+    printToken(tok);
+    std::cout << ' ';
   }
 }

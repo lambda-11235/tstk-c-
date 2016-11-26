@@ -7,7 +7,7 @@
 
 
 /**
- *
+ * An exception that occurs when a reference to an unknown label is found.
  */
 class ReferenceError : public std::runtime_error {
   int line;

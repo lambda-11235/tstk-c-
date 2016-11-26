@@ -83,6 +83,7 @@ int main(int argc, char *argv[]) {
 
     else if(commandLine.shouldDebug()) {
       Instruction inst;
+      Token tok;
       string buf;
       interpreter.addTokens(toks);
 
@@ -90,8 +91,10 @@ int main(int argc, char *argv[]) {
 
       while(interpreter.stillRunning()) {
         inst = interpreter.currentInstruction();
-        cout << "\n<Running> ";
-        printInstruction(inst);
+        tok = interpreter.currentToken();
+
+        cout << "\n<Running line " << tok.line << ", column " << tok.column << "> ";
+        printToken(tok);
 
         getline(cin, buf);
 

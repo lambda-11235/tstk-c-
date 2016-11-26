@@ -77,6 +77,7 @@ std::map<std::string, int_type> labelAddresses(std::vector<Token> toks,
 
 void printInstruction(Instruction inst);
 void printInstructions(std::vector<Instruction> insts);
+void printToken(Token toks);
 void printTokens(std::vector<Token> toks);
 
 #endif /* AST_H */
