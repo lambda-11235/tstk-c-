@@ -10,13 +10,17 @@
  *
  */
 class ReferenceError : public std::runtime_error {
+  int line;
+  int column;
   std::string reference;
 
 public:
-  ReferenceError(const std::string& reference)
-    : reference(reference), runtime_error("Reference to unknown label: @"
-      + reference) { }
+  ReferenceError(int line, int column, const std::string& reference)
+    : line(line), column(column), reference(reference),
+      runtime_error("Reference to unknown label: @" + reference) { }
 
+  inline int getLine() const { return line; }
+  inline int getColumn() const { return column; }
   inline std::string getReference() const { return reference; }
 };
 

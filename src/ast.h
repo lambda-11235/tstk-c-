@@ -47,6 +47,10 @@ struct Token {
   // constructor. So, just ignore the field that isn't used.
   std::string name;
   Instruction inst;
+
+  // Line and column information for debugging.
+  int line;
+  int column;
 };
 
 

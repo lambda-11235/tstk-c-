@@ -28,11 +28,17 @@ Token Lexer::getToken() {
   Token tok;
   char ch;
 
+  int tokLine;
+  int tokColumn;
+
   skipWhitespace();
 
   ch = peek();
 
   if(ch == ':') {
+    tokLine = line;
+    tokColumn = column;
+
     get();
 
     std::string name = getWord();
@@ -42,21 +48,31 @@ Token Lexer::getToken() {
 
       tok.type = LABEL;
       tok.name = name;
+      tok.line = tokLine;
+      tok.column = tokColumn;
     } else {
       throw LexerException(line, column, "Expected ':'");
     }
   }
 
   else if(ch == '@') {
+    tokLine = line;
+    tokColumn = column;
+
     get();
 
     std::string name = getWord();
 
     tok.type = REFER;
     tok.name = name;
+    tok.line = tokLine;
+    tok.column = tokColumn;
   }
 
   else if(ch == '-' || (ch >= '0' && ch <= '9')) {
+    tokLine = line;
+    tokColumn = column;
+
     int_type n = getInteger();
 
     Instruction inst;
@@ -65,9 +81,14 @@ Token Lexer::getToken() {
 
     tok.type = INST;
     tok.inst = inst;
+    tok.line = tokLine;
+    tok.column = tokColumn;
   }
 
   else if((ch >= 'a' && ch <= 'z') || (ch >= 'A' && ch <= 'Z')) {
+    tokLine = line;
+    tokColumn = column;
+
     std::string com = getWord();
 
     Instruction inst;
@@ -106,9 +127,11 @@ Token Lexer::getToken() {
 
     tok.type = INST;
     tok.inst = inst;
+    tok.line = tokLine;
+    tok.column = tokColumn;
   }
 
-  else {
+  else if (ch > 0) {
     std::string msg = "Unexpected character ";
     msg += ch;
     msg += " found";

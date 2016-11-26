@@ -68,7 +68,8 @@ int main(int argc, char *argv[]) {
       try{
         compiler.addTokens(toks);
       } catch(ReferenceError& err) {
-        cerr << "Error: Reference to unknown label, @" << err.getReference() << endl;
+        cerr << "Error: Reference to unknown label (" << err.getLine() << ":"
+        << err.getColumn() << "): @" << err.getReference() << endl;
         return 1;
       }
 
@@ -105,7 +106,14 @@ int main(int argc, char *argv[]) {
     }
 
     else {
-      interpreter.addTokens(toks);
+      try{
+        interpreter.addTokens(toks);
+      } catch(ReferenceError& err) {
+        cerr << "Error: Reference to unknown label (" << err.getLine() << ":"
+        << err.getColumn() << "): @" << err.getReference() << endl;
+        return 1;
+      }
+
       interpreter.run();
     }
   }
@@ -140,7 +148,8 @@ int main(int argc, char *argv[]) {
         interpreter.printStack();
         cout << endl;
       } catch(ReferenceError& err) {
-        cerr << "Error: Reference to unknown label, @" << err.getReference() << endl;
+        cerr << "Error: Reference to unknown label (" << err.getColumn()
+          << "): @" << err.getReference() << endl;
       }
     }
   }
