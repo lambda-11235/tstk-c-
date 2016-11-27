@@ -164,10 +164,10 @@ int main(int argc, char *argv[]) {
 void printHelpMsg() {
   cout << "Usage: tstk [flags] [files] [-o file] [-s stack_size]\n\n"
        << "Flags:\n"
-       << "\t-c, --compile -- Compile listed files instead of interpreting them.\n"
-       << "\t-d, --debug -- Run the debugger.\n"
-       << "\t-i, --interpret -- Run the interpreter.\n"
-       << "\t-h, --help -- Print this help message.\n"
-       << "\t-o, --output -- Set the output file for compilation.\n"
-       << "\t-s, --stack-size -- Set the stack size in compiled code.\n";
+       << "  -c, --compile     -- Compile listed files instead of interpreting them.\n"
+       << "  -d, --debug       -- Run the debugger.\n"
+       << "  -i, --interpret   -- Run the interpreter.\n"
+       << "  -h, --help        -- Print this help message.\n"
+       << "  -o, --output      -- Set the output file for compilation.\n"
+       << "  -s, --stack-size  -- Set the stack size in compiled code.\n";
 }
