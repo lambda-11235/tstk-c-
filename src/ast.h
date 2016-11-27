@@ -48,7 +48,8 @@ struct Token {
   std::string name;
   Instruction inst;
 
-  // Line and column information for debugging.
+  // File, line, and column information for debugging.
+  std::string file;
   int line;
   int column;
 };

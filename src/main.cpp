@@ -41,14 +41,14 @@ int main(int argc, char *argv[]) {
       ifstream input(file.c_str());
 
       if(input) {
-        Lexer lex(&input);
+        Lexer lex(file, &input);
 
         try {
           for(Token tok : lex.tokenize())
           toks.push_back(tok);
-        } catch(LexerException& lexExc) {
-          cout << file << ' ' << lexExc.getLine() << ','
-          << lexExc.getColumn() << ": " << lexExc.getMessage() << ".\n";
+        } catch(LexerException& exc) {
+          cout << exc.getFile() << ' ' << exc.getLine() << ','
+            << exc.getColumn() << ": " << exc.getMessage() << ".\n";
 
           return 1;
         }
@@ -68,8 +68,10 @@ int main(int argc, char *argv[]) {
       try{
         compiler.addTokens(toks);
       } catch(ReferenceError& err) {
-        cerr << "Error: Reference to unknown label (" << err.getLine() << ":"
-        << err.getColumn() << "): @" << err.getReference() << endl;
+        cerr << "Error: Reference to unknown label (" << err.getFile() << ' '
+          << err.getLine() << ":" << err.getColumn() << "): @"
+          << err.getReference() << endl;
+
         return 1;
       }
 
@@ -93,7 +95,8 @@ int main(int argc, char *argv[]) {
         inst = interpreter.currentInstruction();
         tok = interpreter.currentToken();
 
-        cout << "\n<Running line " << tok.line << ", column " << tok.column << "> ";
+        cout << "\n<Running " << tok.file << " line " << tok.line << ", column "
+          << tok.column << "> ";
         printToken(tok);
 
         getline(cin, buf);
@@ -112,8 +115,10 @@ int main(int argc, char *argv[]) {
       try{
         interpreter.addTokens(toks);
       } catch(ReferenceError& err) {
-        cerr << "Error: Reference to unknown label (" << err.getLine() << ":"
-        << err.getColumn() << "): @" << err.getReference() << endl;
+        cerr << "Error: Reference to unknown label (" << err.getFile() << ' '
+          << err.getLine() << ':' << err.getColumn() << "): @"
+          << err.getReference() << endl;
+
         return 1;
       }
 
@@ -132,16 +137,16 @@ int main(int argc, char *argv[]) {
       strm.clear();
       strm.str(buf);
 
-      Lexer lex(&strm);
+      Lexer lex("CIN", &strm);
       toks.clear();
 
       try {
         for(Token tok : lex.tokenize())
           toks.push_back(tok);
-      } catch(LexerException& lexExc) {
+      } catch(LexerException& exc) {
         // The line isn't printed since it was obviously the last one entered
         // into the REPL.
-        cout << lexExc.getColumn() << ": " << lexExc.getMessage() << endl;
+        cout << exc.getColumn() << ": " << exc.getMessage() << endl;
       }
 
       try{

@@ -11,14 +11,16 @@
  * details of the error.
  */
 class LexerException : public std::runtime_error {
+  std::string file;
   int line;
   int column;
   std::string msg;
 
 public:
-  LexerException(int line, int column, const std::string& msg)
-    : line(line), column(column), msg(msg), runtime_error(msg) { }
+  LexerException(const std::string& file, int line, int column, const std::string& msg)
+    : file(file), line(line), column(column), msg(msg), runtime_error(msg) { }
 
+  inline std::string getFile() const { return file; }
   inline int getLine() const { return line; }
   inline int getColumn() const { return column; }
   inline std::string getMessage() const { return msg; }

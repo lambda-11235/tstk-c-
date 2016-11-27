@@ -12,6 +12,7 @@
 
 
 class Lexer {
+  std::string file;
   std::istream* input;
   int line;
   int column;
@@ -20,7 +21,7 @@ public:
   /**
    * Construct a new lexer that read input from a stream.
    */
-  Lexer(std::istream* instr);
+  Lexer(std::string inputFile, std::istream* instr);
 
   /**
    * Produce a series of tokens from the input stream.

@@ -10,15 +10,17 @@
  * An exception that occurs when a reference to an unknown label is found.
  */
 class ReferenceError : public std::runtime_error {
+  std::string file;
   int line;
   int column;
   std::string reference;
 
 public:
-  ReferenceError(int line, int column, const std::string& reference)
-    : line(line), column(column), reference(reference),
+  ReferenceError(const std::string& file, int line, int column, const std::string& reference)
+    : file(file), line(line), column(column), reference(reference),
       runtime_error("Reference to unknown label: @" + reference) { }
 
+  inline std::string getFile() const { return file; }
   inline int getLine() const { return line; }
   inline int getColumn() const { return column; }
   inline std::string getReference() const { return reference; }

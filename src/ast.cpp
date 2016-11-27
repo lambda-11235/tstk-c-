@@ -26,7 +26,7 @@ std::vector<Instruction> removeLabels(std::vector<Token> toks,
           tmpInst.inst.n = it->second;
           insts.push_back(tmpInst);
         } else {
-          throw ReferenceError(tok.line, tok.column, tok.name);
+          throw ReferenceError(tok.file, tok.line, tok.column, tok.name);
         }
 
         break;
