@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "ast.h"
-#include "exception/Lexer.h"
+#include "exception/lexer.h"
 
 
 #ifndef LEXER_H

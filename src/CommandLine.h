@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "ast.h"
-#include "exception/CommandLine.h"
+#include "exception/commandLine.h"
 
 #ifndef COMMAND_LINE_H
 #define COMMAND_LINE_H
