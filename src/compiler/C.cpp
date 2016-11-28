@@ -13,6 +13,9 @@ namespace compiler {
   void C::addTokens(std::vector<Token> toks) {
     std::vector<Instruction> insts = removeLabels(toks, instructions.size());
 
+    // Avoid extra copying of elements.
+    instructions.reserve(instructions.size() + insts.size());
+
     for(Instruction inst : insts) {
       instructions.push_back(inst);
     }
