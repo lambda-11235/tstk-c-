@@ -17,8 +17,12 @@ Lexer::Lexer(std::string inputFile, std::istream* instr) {
 std::vector<Token> Lexer::tokenize() {
   std::vector<Token> toks;
 
+  skipWhitespace();
+
   while(*input && peek() > 0) {
     toks.push_back(getToken());
+
+  skipWhitespace();
   }
 
   return toks;
@@ -31,8 +35,6 @@ Token Lexer::getToken() {
 
   int tokLine;
   int tokColumn;
-
-  skipWhitespace();
 
   ch = peek();
 
@@ -53,7 +55,7 @@ Token Lexer::getToken() {
       tok.line = tokLine;
       tok.column = tokColumn;
     } else {
-      throw LexerException(file, line, column, "Expected ':'");
+      throw LexerError(file, line, column, "Expected ':'");
     }
   }
 
@@ -126,7 +128,7 @@ Token Lexer::getToken() {
 
       // Subtracting com.size from column gives the column where the command
       // starts, instead where it ends.
-      throw LexerException(file, line, column - com.size(), msg);
+      throw LexerError(file, line, column - com.size(), msg);
     }
 
     tok.type = INST;
@@ -136,11 +138,11 @@ Token Lexer::getToken() {
     tok.column = tokColumn;
   }
 
-  else if (ch > 0) {
+  else {
     std::string msg = "Unexpected character ";
     msg += ch;
     msg += " found";
-    throw LexerException(file, line, column, msg);
+    throw LexerError(file, line, column, msg);
   }
 
   return tok;
@@ -170,7 +172,7 @@ int_type Lexer::getInteger() {
   }
 
   if(! (peek() >= '0' && peek() <= '9')) {
-    throw LexerException(file, line, column, "Expecting a digit (0-9)");
+    throw LexerError(file, line, column, "Expecting a digit (0-9)");
   }
 
   while(peek() >= '0' && peek() <= '9') {

@@ -1,5 +1,6 @@
 
 #include <stdexcept>
+#include <sstream>
 #include <string>
 
 #ifndef EXCEPTION_AST_H
@@ -9,7 +10,7 @@
 /**
  * An exception that occurs when a reference to an unknown label is found.
  */
-class ReferenceError : public std::runtime_error {
+class ReferenceError {
   std::string file;
   int line;
   int column;
@@ -17,8 +18,7 @@ class ReferenceError : public std::runtime_error {
 
 public:
   ReferenceError(const std::string& file, int line, int column, const std::string& reference)
-    : file(file), line(line), column(column), reference(reference),
-      runtime_error("Reference to unknown label: @" + reference) { }
+    : file(file), line(line), column(column), reference(reference) { }
 
   inline std::string getFile() const { return file; }
   inline int getLine() const { return line; }

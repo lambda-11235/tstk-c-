@@ -47,64 +47,46 @@ void Interpreter::runInstruction() {
 
 
   if(inst.pushInt) {
-    stack.push_back(inst.inst.n);
+    stack.push(inst.inst.n);
   } else {
     // NOTE: Arguments are popped off of the stack in reverse order.
     switch(inst.inst.com) {
       case ADD:
-        y = stack.back();
-        stack.pop_back();
+        y = stack.pop();
+        x = stack.pop();
 
-        x = stack.back();
-        stack.pop_back();
-
-        stack.push_back(x + y);
+        stack.push(x + y);
         break;
 
       case SUB:
-        y = stack.back();
-        stack.pop_back();
+        y = stack.pop();
+        x = stack.pop();
 
-        x = stack.back();
-        stack.pop_back();
-
-        stack.push_back(x - y);
+        stack.push(x - y);
         break;
 
       case MUL:
-        y = stack.back();
-        stack.pop_back();
+        y = stack.pop();
+        x = stack.pop();
 
-        x = stack.back();
-        stack.pop_back();
-
-        stack.push_back(x * y);
+        stack.push(x * y);
         break;
 
       case DIV:
-        y = stack.back();
-        stack.pop_back();
+        y = stack.pop();
+        x = stack.pop();
 
-        x = stack.back();
-        stack.pop_back();
-
-        stack.push_back(x / y);
+        stack.push(x / y);
         break;
 
       case JMP:
-        ip = stack.back() - 1;
-        stack.pop_back();
+        ip = stack.pop() - 1;
         break;
 
       case JEQ:
-        n = stack.back();
-        stack.pop_back();
-
-        y = stack.back();
-        stack.pop_back();
-
-        x = stack.back();
-        stack.pop_back();
+        n = stack.pop();
+        y = stack.pop();
+        x = stack.pop();
 
         if(x == y) {
           ip = n - 1;
@@ -113,14 +95,9 @@ void Interpreter::runInstruction() {
         break;
 
       case JNQ:
-        n = stack.back();
-        stack.pop_back();
-
-        y = stack.back();
-        stack.pop_back();
-
-        x = stack.back();
-        stack.pop_back();
+        n = stack.pop();
+        y = stack.pop();
+        x = stack.pop();
 
         if(x != y) {
           ip = n - 1;
@@ -129,14 +106,9 @@ void Interpreter::runInstruction() {
         break;
 
       case JGT:
-        n = stack.back();
-        stack.pop_back();
-
-        y = stack.back();
-        stack.pop_back();
-
-        x = stack.back();
-        stack.pop_back();
+        n = stack.pop();
+        y = stack.pop();
+        x = stack.pop();
 
         if(x > y) {
           ip = n - 1;
@@ -145,14 +117,9 @@ void Interpreter::runInstruction() {
         break;
 
       case JLT:
-        n = stack.back();
-        stack.pop_back();
-
-        y = stack.back();
-        stack.pop_back();
-
-        x = stack.back();
-        stack.pop_back();
+        n = stack.pop();
+        y = stack.pop();
+        x = stack.pop();
 
         if(x < y) {
           ip = n - 1;
@@ -161,47 +128,40 @@ void Interpreter::runInstruction() {
         break;
 
       case GET:
-        n = stack.back();
-        stack.pop_back();
+        n = stack.pop();
 
-        stack.push_back(stack[(stack.size() - 1) - n]);
+        stack.push(stack.get(n));
         break;
 
       case SET:
-        n = stack.back();
-        stack.pop_back();
+        n = stack.pop();
+        x = stack.pop();
 
-        x = stack.back();
-        stack.pop_back();
-
-        stack[(stack.size() - 1) - n] = x;
+        stack.set(n, x);
         break;
 
       case DUP:
-        stack.push_back(stack.back());
+        stack.push(stack.top());
         break;
 
       case POP:
-        stack.pop_back();
+        stack.pop();
         break;
 
       case PPOS:
-        stack.push_back(ip);
+        stack.push(ip);
         break;
 
       case SIZE:
-        stack.push_back(stack.size());
+        stack.push(stack.size());
         break;
 
       case SWAP:
-        y = stack.back();
-        stack.pop_back();
+        y = stack.pop();
+        x = stack.pop();
 
-        x = stack.back();
-        stack.pop_back();
-
-        stack.push_back(y);
-        stack.push_back(x);
+        stack.push(y);
+        stack.push(x);
         break;
 
       case DBG:
@@ -209,22 +169,20 @@ void Interpreter::runInstruction() {
         break;
 
       case PRINT:
-        std::cout << stack.back() << std::endl;
-        stack.pop_back();
+        std::cout << stack.pop() << std::endl;
         break;
 
       case CPRINT:
-        std::cout << (char) stack.back();
-        stack.pop_back();
+        std::cout << (char) stack.pop();
         break;
 
       case READ:
         std::cin >> x;
-        stack.push_back(x);
+        stack.push(x);
         break;
 
       case CREAD:
-        stack.push_back(std::cin.get());
+        stack.push(std::cin.get());
         break;
     }
   }
@@ -234,15 +192,5 @@ void Interpreter::runInstruction() {
 
 
 void Interpreter::printStack() {
-  std::cout << '[';
-
-  for(int i = 0; i < stack.size(); i++) {
-    std::cout << stack[i];
-
-    if(i != stack.size() - 1) {
-      std::cout << ", ";
-    }
-  }
-
-  std::cout << ']';
+  std::cout << stack << std::endl;
 }

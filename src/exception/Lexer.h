@@ -10,15 +10,15 @@
  * A possible lexer error, contaning information about the line, column, and
  * details of the error.
  */
-class LexerException : public std::runtime_error {
+class LexerError {
   std::string file;
   int line;
   int column;
   std::string msg;
 
 public:
-  LexerException(const std::string& file, int line, int column, const std::string& msg)
-    : file(file), line(line), column(column), msg(msg), runtime_error(msg) { }
+  LexerError(const std::string& file, int line, int column, const std::string& msg)
+    : file(file), line(line), column(column), msg(msg) { }
 
   inline std::string getFile() const { return file; }
   inline int getLine() const { return line; }

@@ -4,6 +4,7 @@
 #include <vector>
 
 #include "ast.h"
+#include "Stack.h"
 
 
 #ifndef INTERPRETER_H
@@ -16,7 +17,7 @@ class Interpreter {
   // removed from the token list.
   std::vector<Token> tokens;
 
-  std::vector<int_type> stack;
+  Stack<int_type> stack;
 
   // The instruction pointer. It contains the index of the currently executing
   // instruction.

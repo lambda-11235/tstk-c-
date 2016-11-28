@@ -24,8 +24,8 @@ int main(int argc, char *argv[]) {
 
   try {
     commandLine.parse();
-  } catch(CommandLineError& err) {
-    cout << "Error: " << err.what() << ".\n";
+  } catch(NoFlagError& err) {
+    cout << "Error: Unrecognized flag '" << err.getFlag() << "'.\n";
     return 1;
   }
 
@@ -46,9 +46,9 @@ int main(int argc, char *argv[]) {
         try {
           for(Token tok : lex.tokenize())
           toks.push_back(tok);
-        } catch(LexerException& exc) {
-          cout << exc.getFile() << ' ' << exc.getLine() << ','
-            << exc.getColumn() << ": " << exc.getMessage() << ".\n";
+        } catch(LexerError& err) {
+          cout << err.getFile() << ' ' << err.getLine() << ','
+            << err.getColumn() << ": " << err.getMessage() << ".\n";
 
           return 1;
         }
@@ -87,21 +87,35 @@ int main(int argc, char *argv[]) {
       Instruction inst;
       Token tok;
       string buf;
-      interpreter.addTokens(toks);
 
-      cout << "Running script (press enter to execute instructions)";
+      try {
+       interpreter.addTokens(toks);
+      } catch(ReferenceError& err) {
+        cerr << "Error: Reference to unknown label (" << err.getFile() << ' '
+          << err.getLine() << ':' << err.getColumn() << "): @"
+          << err.getReference() << endl;
+
+        return 1;
+      }
+
+      cout << "Running script (press enter to execute instructions)\n";
 
       while(interpreter.stillRunning()) {
         inst = interpreter.currentInstruction();
         tok = interpreter.currentToken();
 
-        cout << "\n<Running " << tok.file << " line " << tok.line << ", column "
+        cout << "<Running " << tok.file << " line " << tok.line << ", column "
           << tok.column << "> ";
         printToken(tok);
 
         getline(cin, buf);
 
-        interpreter.runInstruction();
+        try {
+          interpreter.runInstruction();
+        } catch(StackUnderflow& err) {
+          cerr << "Error: Stack underflow.\n";
+          return 1;
+        }
 
         if(!inst.pushInt && (inst.inst.com == READ || inst.inst.com == CREAD))
           cin.ignore();
@@ -114,15 +128,25 @@ int main(int argc, char *argv[]) {
     else {
       try{
         interpreter.addTokens(toks);
+
+        interpreter.run();
       } catch(ReferenceError& err) {
         cerr << "Error: Reference to unknown label (" << err.getFile() << ' '
           << err.getLine() << ':' << err.getColumn() << "): @"
           << err.getReference() << endl;
 
         return 1;
-      }
+      } catch(StackUnderflow& err) {
+        Token tok = interpreter.currentToken();
+        cerr << "Error: Stack underflow at " << tok.file << " (" << tok.line
+          << ':' << tok.column << ") when executing '";
 
-      interpreter.run();
+        printToken(tok);
+
+        cout << "'.\n";
+
+        return 1;
+      }
     }
   }
 
@@ -143,10 +167,10 @@ int main(int argc, char *argv[]) {
       try {
         for(Token tok : lex.tokenize())
           toks.push_back(tok);
-      } catch(LexerException& exc) {
+      } catch(LexerError& err) {
         // The line isn't printed since it was obviously the last one entered
         // into the REPL.
-        cout << exc.getColumn() << ": " << exc.getMessage() << endl;
+        cout << err.getColumn() << ": " << err.getMessage() << endl;
       }
 
       try{
@@ -154,10 +178,12 @@ int main(int argc, char *argv[]) {
         interpreter.run();
 
         interpreter.printStack();
-        cout << endl;
       } catch(ReferenceError& err) {
         cerr << "Error: Reference to unknown label (" << err.getColumn()
           << "): @" << err.getReference() << endl;
+      } catch(StackUnderflow& err) {
+        cerr << "Error: Stack underflow.\n";
+        return 1;
       }
     }
   }

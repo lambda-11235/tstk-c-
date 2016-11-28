@@ -18,6 +18,7 @@ CommandLine::CommandLine(int argc, char* argv[]) {
 
 void CommandLine::parse() {
   expectingStackSize = false;
+  expectingOutputFile = false;
 
   bool onlyInputFiles = false;
 
