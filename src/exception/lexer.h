@@ -1,4 +1,5 @@
 
+#include <sstream>
 #include <stdexcept>
 #include <string>
 
@@ -10,7 +11,7 @@
  * A possible lexer error, contaning information about the line, column, and
  * details of the error.
  */
-class LexerError {
+class LexerError : std::exception {
   std::string file;
   int line;
   int column;
@@ -24,6 +25,15 @@ public:
   inline int getLine() const { return line; }
   inline int getColumn() const { return column; }
   inline std::string getMessage() const { return msg; }
+
+  const char* what() const throw() {
+    std::stringstream strm;
+
+    strm << "Lexical error in " << file << " at line " << line << ", column "
+      << column << ": " << msg;
+
+    return strm.str().c_str();
+  }
 };
 
 

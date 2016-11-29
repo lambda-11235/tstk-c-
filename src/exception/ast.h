@@ -10,7 +10,7 @@
 /**
  * An exception that occurs when a reference to an unknown label is found.
  */
-class ReferenceError {
+class ReferenceError : public std::exception {
   std::string file;
   int line;
   int column;
@@ -24,6 +24,15 @@ public:
   inline int getLine() const { return line; }
   inline int getColumn() const { return column; }
   inline std::string getReference() const { return reference; }
+
+  const char* what() const throw() {
+    std::stringstream strm;
+
+    strm << "Reference to unknown label in " << file << " at line " << line
+      << ", column " << column << ": @" << reference;
+
+    return strm.str().c_str();
+  }
 };
 
 

@@ -11,7 +11,7 @@
 /**
  * A command line error that occurs when the user gives an inexistent flag.
  */
-class NoFlagError {
+class NoFlagError : std::exception {
 private:
   std::string flag;
 
@@ -19,6 +19,14 @@ public:
   NoFlagError(const std::string& flag) : flag(flag) {}
 
   inline std::string getFlag() const { return flag; }
+
+  const char* what() const throw() {
+    std::stringstream strm;
+
+    strm << "Unrecognized flag '" << flag << '\'';
+
+    return strm.str().c_str();
+  }
 };
 
 

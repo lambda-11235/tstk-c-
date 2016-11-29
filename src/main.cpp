@@ -24,8 +24,8 @@ int main(int argc, char *argv[]) {
 
   try {
     commandLine.parse();
-  } catch(NoFlagError& err) {
-    cout << "Error: Unrecognized flag '" << err.getFlag() << "'.\n";
+  } catch(exception& exc) {
+    cout << "Error: " << exc.what() << "'.\n";
     return 1;
   }
 
@@ -46,9 +46,8 @@ int main(int argc, char *argv[]) {
         try {
           for(Token tok : lex.tokenize())
           toks.push_back(tok);
-        } catch(LexerError& err) {
-          cout << err.getFile() << ' ' << err.getLine() << ','
-            << err.getColumn() << ": " << err.getMessage() << ".\n";
+        } catch(exception& exc) {
+          cout << "Error: " << exc.what() << ".\n";
 
           return 1;
         }
@@ -67,10 +66,8 @@ int main(int argc, char *argv[]) {
 
       try{
         compiler.addTokens(toks);
-      } catch(ReferenceError& err) {
-        cerr << "Error: Reference to unknown label (" << err.getFile() << ' '
-          << err.getLine() << ":" << err.getColumn() << "): @"
-          << err.getReference() << endl;
+      } catch(exception& exc) {
+        cerr << "Error: " << exc.what() << endl;
 
         return 1;
       }
@@ -89,11 +86,9 @@ int main(int argc, char *argv[]) {
       string buf;
 
       try {
-       interpreter.addTokens(toks);
-      } catch(ReferenceError& err) {
-        cerr << "Error: Reference to unknown label (" << err.getFile() << ' '
-          << err.getLine() << ':' << err.getColumn() << "): @"
-          << err.getReference() << endl;
+        interpreter.addTokens(toks);
+      } catch(exception& exc) {
+        cerr << "Error: " << exc.what() << endl;
 
         return 1;
       }
@@ -112,8 +107,9 @@ int main(int argc, char *argv[]) {
 
         try {
           interpreter.runInstruction();
-        } catch(StackUnderflow& err) {
-          cerr << "Error: Stack underflow.\n";
+        } catch(exception& exc) {
+          cerr << "Error: " << exc.what() << endl;
+
           return 1;
         }
 
@@ -130,20 +126,18 @@ int main(int argc, char *argv[]) {
         interpreter.addTokens(toks);
 
         interpreter.run();
-      } catch(ReferenceError& err) {
-        cerr << "Error: Reference to unknown label (" << err.getFile() << ' '
-          << err.getLine() << ':' << err.getColumn() << "): @"
-          << err.getReference() << endl;
-
-        return 1;
       } catch(StackUnderflow& err) {
         Token tok = interpreter.currentToken();
-        cerr << "Error: Stack underflow at " << tok.file << " (" << tok.line
-          << ':' << tok.column << ") when executing '";
+        cerr << "Error: Stack underflow in " << tok.file << " at line "
+          << tok.line << ", column " << tok.column << " when executing '";
 
         printToken(tok);
 
         cout << "'.\n";
+
+        return 1;
+      } catch(exception& exc) {
+        cerr << "Error: " << exc.what() << endl;
 
         return 1;
       }
@@ -167,22 +161,21 @@ int main(int argc, char *argv[]) {
       try {
         for(Token tok : lex.tokenize())
           toks.push_back(tok);
-      } catch(LexerError& err) {
-        // The line isn't printed since it was obviously the last one entered
-        // into the REPL.
-        cout << err.getColumn() << ": " << err.getMessage() << endl;
-      }
 
-      try{
         interpreter.addTokens(toks);
         interpreter.run();
 
         interpreter.printStack();
+      } catch(LexerError& err) {
+        // The line isn't printed since it was obviously the last one entered
+        // into the REPL.
+        cout << "Error (column " << err.getColumn() << "): " << err.getMessage() << endl;
       } catch(ReferenceError& err) {
-        cerr << "Error: Reference to unknown label (" << err.getColumn()
-          << "): @" << err.getReference() << endl;
-      } catch(StackUnderflow& err) {
-        cerr << "Error: Stack underflow.\n";
+        cerr << "Error: Reference to unknown label at column " << err.getColumn()
+          << ", @" << err.getReference() << endl;
+      } catch(exception& exc) {
+        cerr << "Error: " << exc.what() << endl;
+
         return 1;
       }
     }
