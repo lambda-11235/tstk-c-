@@ -113,10 +113,9 @@ int main(int argc, char *argv[]) {
           return 1;
         }
 
-        if(!inst.pushInt && (inst.inst.com == READ || inst.inst.com == CREAD))
-          cin.ignore();
+        if(!inst.pushInt && inst.inst.com == CPRINT)
+          cout << endl;
 
-        if(!inst.pushInt && inst.inst.com == CPRINT) cout << endl;
         interpreter.printStack();
       }
     }

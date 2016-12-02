@@ -183,10 +183,12 @@ void Interpreter::runInstruction() {
       case READ:
         std::cin >> x;
         stack.push(x);
+        std::cin.ignore();
         break;
 
       case CREAD:
         stack.push(std::cin.get());
+        std::cin.ignore();
         break;
     }
   }
