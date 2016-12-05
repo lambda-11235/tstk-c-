@@ -1,4 +1,5 @@
-
+// Programmer: Taran Lynn
+// Programmer's ID: 1513043
 
 template<class T>
 Stack<T>::Stack() {}

@@ -1,3 +1,5 @@
+// Programmer: Taran Lynn
+// Programmer's ID: 1513043
 
 #include <ostream>
 #include <vector>

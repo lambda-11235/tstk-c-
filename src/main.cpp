@@ -1,3 +1,5 @@
+// Programmer: Taran Lynn
+// Programmer's ID: 1513043
 
 #include <fstream>
 #include <iostream>
@@ -17,6 +19,11 @@ void printHelpMsg();
 
 
 int main(int argc, char *argv[]) {
+  // programmer's identification
+  cout << "Programmer: Taran Lynn\n";
+  cout << "Programmer's ID: 1513043\n";
+  cout << "File: " << __FILE__ << endl << endl;
+
   Interpreter interpreter;
   vector<Token> toks;
 
